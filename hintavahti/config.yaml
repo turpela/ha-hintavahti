@@ -1,8 +1,8 @@
 name: "Hintavahti"
-version: "2.1.1"
+version: "2.1.2"
 slug: "hintavahti"
 description: "Seuraa tuotteiden hintoja ja ilmoita kun ne laskevat. Sensorit HA:han ja sähköposti-ilmoitukset."
-url: "https://github.com/your-username/hintavahti"
+url: "https://github.com/turpela/ha-hintavahti"
 arch:
   - aarch64
   - amd64
