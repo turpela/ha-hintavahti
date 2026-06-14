@@ -39,6 +39,24 @@ def _clean_addr(s: str) -> str:
     return s.replace("\u200b", "").replace("\ufeff", "").strip()
 
 
+def _clean_secret(s: str) -> str:
+    """Clean SMTP credentials.
+
+    Removes non-breaking/unicode whitespace and zero-width characters that
+    sneak in via copy-paste (e.g. the spaces in a Gmail app password), which
+    would otherwise crash smtplib's ASCII-encoded AUTH step. Plain ASCII spaces
+    are kept in case a password legitimately contains one.
+    """
+    out = []
+    for ch in str(s):
+        if ch in ("\u200b", "\u200c", "\u200d", "\ufeff"):
+            continue
+        if ch.isspace() and ch != " ":
+            continue
+        out.append(ch)
+    return "".join(out).strip()
+
+
 def _send(to_email: str, subject: str, body: str) -> tuple[bool, str]:
     """Send one message. Returns (ok, message)."""
     if not config.SMTP_HOST:
@@ -54,12 +72,15 @@ def _send(to_email: str, subject: str, body: str) -> tuple[bool, str]:
     msg["To"] = to_email
     msg.set_content(_clean_text(body))
 
+    user = _clean_addr(config.SMTP_USER)
+    password = _clean_secret(config.SMTP_PASS)
+
     try:
         with smtplib.SMTP(config.SMTP_HOST, config.SMTP_PORT, timeout=30) as server:
             if config.SMTP_TLS:
                 server.starttls(context=ssl.create_default_context())
-            if config.SMTP_USER:
-                server.login(config.SMTP_USER, config.SMTP_PASS)
+            if user:
+                server.login(user, password)
             server.send_message(msg)
         log.info("Sähköposti lähetetty osoitteeseen %s", to_email)
         return True, "Lähetetty."
