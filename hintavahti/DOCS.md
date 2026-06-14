@@ -21,6 +21,7 @@ sensoreina MQTT:n kautta.
 | `request_delay_seconds` | Viive pyyntöjen välillä tarkistuskierroksella. |
 | `playwright_enabled` | Salli sivujen renderöinti selaimella (JS-sivut). |
 | `log_level` | Lokitaso: debug / info / warning / error. |
+| `timezone` | Aikavyöhyke, jolla ajat näytetään (oletus `Europe/Helsinki`). |
 | `smtp_*` | Sähköpostipalvelimen tiedot ilmoituksia varten (valinnainen). |
 | `mqtt_enabled` | Julkaise tuotteet HA-sensoreina MQTT:n kautta. |
 | `mqtt_*` | MQTT-brokerin tiedot. Jää tyhjäksi → haetaan Mosquitto-add-onilta. |
@@ -30,6 +31,9 @@ sensoreina MQTT:n kautta.
 Jätä `smtp_host` tyhjäksi, jos et halua sähköposteja — hinnanlaskut näkyvät
 silti käyttöliittymässä ja lokissa. Gmailille: `smtp_host: smtp.gmail.com`,
 `smtp_port: 587`, käyttäjänä sähköpostiosoite ja salasanana **sovellussalasana**.
+
+Voit kokeilla asetuksia käyttöliittymän **Testaa sähköposti** -napilla: se
+lähettää testiviestin välilehden osoitteeseen ja kertoo heti, onnistuiko se.
 
 ### Home Assistant -sensorit (MQTT)
 

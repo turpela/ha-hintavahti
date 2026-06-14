@@ -1,5 +1,7 @@
-# python:3.12-slim is multi-arch, so this builds for both amd64 and aarch64.
-FROM python:3.12-slim
+# Official Playwright image: Chromium + all OS dependencies are pre-installed,
+# so we never run the fragile `playwright install --with-deps`. Multi-arch
+# (amd64 + arm64). The image version MUST match the playwright pip version.
+FROM mcr.microsoft.com/playwright/python:v1.49.1-noble
 
 ENV PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
@@ -7,16 +9,11 @@ ENV PYTHONUNBUFFERED=1 \
 
 WORKDIR /app
 
-# Build deps for lxml
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends gcc libxml2-dev libxslt1-dev \
-    && rm -rf /var/lib/apt/lists/*
-
+# Browsers are already baked into the image (PLAYWRIGHT_BROWSERS_PATH=/ms-playwright).
+# We only install the Python dependencies. lxml/pydantic ship prebuilt wheels,
+# so no compiler is needed.
 COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-# Install Chromium and its OS dependencies for Playwright (JS rendering).
-RUN playwright install --with-deps chromium
+RUN pip install --break-system-packages -r requirements.txt
 
 COPY app ./app
 

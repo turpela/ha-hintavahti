@@ -119,3 +119,17 @@ def _migrate() -> None:
 def init_db() -> None:
     Base.metadata.create_all(engine)
     _migrate()
+
+
+def iso_utc(dt: datetime | None) -> str | None:
+    """Serialize a stored timestamp as a UTC-aware ISO string.
+
+    Timestamps are written as UTC but SQLite returns them naive, which makes
+    clients treat them as local time. Tagging them with the UTC offset lets the
+    UI convert to the user's timezone correctly.
+    """
+    if dt is None:
+        return None
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.isoformat()

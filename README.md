@@ -69,6 +69,9 @@ hintavahti/                  # add-on repository (lisää tämä HA:han)
 
 - Playwright tukee arkkitehtuureja amd64 ja aarch64 (esim. Raspberry Pi 4/5
   64-bit, x86). Vanha 32-bit armv7 ei ole tuettu.
+- Add-on rakentuu virallisen Playwright-imagen päälle, jossa Chromium on
+  valmiiksi asennettuna. Image on tämän vuoksi iso (~1–2 GB) ja ensimmäinen
+  asennus kestää hetken.
 - Kauppojen sivut muuttuvat ajoittain; jos jonkin kaupan hinta lakkaa
   löytymästä, päivitä valitsin `app/presets.py`-tiedostoon tai anna tuotteelle
   oma CSS-valitsin.

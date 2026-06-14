@@ -15,7 +15,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from . import config, ha_mqtt, notifier, scraper
-from .database import PricePoint, Product, SessionLocal, Watcher, init_db
+from .database import PricePoint, Product, SessionLocal, Watcher, init_db, iso_utc
 
 logging.basicConfig(
     level=getattr(logging, config.LOG_LEVEL, logging.INFO),
@@ -132,12 +132,12 @@ def product_dict(p: Product, include_history: bool = False) -> dict:
         "css_selector": p.css_selector, "use_js": p.use_js,
         "target_price": p.target_price, "last_price": p.last_price,
         "lowest_price": p.lowest_price,
-        "last_checked": p.last_checked.isoformat() if p.last_checked else None,
+        "last_checked": iso_utc(p.last_checked),
         "last_error": p.last_error,
     }
     if include_history:
         data["history"] = [
-            {"price": pt.price, "checked_at": pt.checked_at.isoformat()}
+            {"price": pt.price, "checked_at": iso_utc(pt.checked_at)}
             for pt in p.history
         ]
     return data
@@ -163,6 +163,10 @@ class ProductUpdate(BaseModel):
     css_selector: str | None = Field(default=None, max_length=255)
     use_js: bool | None = None
     target_price: float | None = None
+
+
+class TestEmailIn(BaseModel):
+    email: str = Field(min_length=1, max_length=255)
 
 
 # --- Watchers ---
@@ -278,10 +282,29 @@ def sensors(db: Session = Depends(get_db)):
             "id": p.id, "name": p.name, "price": p.last_price,
             "lowest_price": p.lowest_price, "target_price": p.target_price,
             "url": p.url,
-            "last_checked": p.last_checked.isoformat() if p.last_checked else None,
+            "last_checked": iso_utc(p.last_checked),
             "error": p.last_error,
         })
     return out
+
+
+# --- App config + email test ---
+@app.get("/api/config")
+def get_app_config():
+    return {
+        "timezone": config.DISPLAY_TIMEZONE,
+        "smtp_configured": bool(config.SMTP_HOST),
+    }
+
+
+@app.post("/api/test-email")
+def test_email(body: TestEmailIn):
+    if not config.SMTP_HOST:
+        raise HTTPException(400, "SMTP-palvelinta ei ole määritetty add-onin asetuksissa.")
+    ok, message = notifier.send_test_email(body.email.strip())
+    if not ok:
+        raise HTTPException(502, f"Lähetys epäonnistui: {message}")
+    return {"ok": True, "message": f"Testiviesti lähetetty osoitteeseen {body.email.strip()}."}
 
 
 # --- Frontend ---

@@ -47,7 +47,7 @@
   main { max-width: 1100px; margin: 0 auto; padding: 22px 20px 60px; }
   .toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;
     justify-content: space-between; margin-bottom: 22px; }
-  .email-edit { display: flex; gap: 8px; align-items: flex-end; flex: 1; min-width: 260px; max-width: 460px; }
+  .email-edit { display: flex; gap: 8px; align-items: flex-end; flex: 1; min-width: 260px; max-width: 600px; flex-wrap: wrap; }
   .email-edit > div { flex: 1; }
 
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px; }
@@ -124,6 +124,7 @@
         <input id="emailInput" type="email" placeholder="nimi@esimerkki.fi">
       </div>
       <button id="saveEmailBtn">Tallenna</button>
+      <button id="testEmailBtn" class="ghost">Testaa sähköposti</button>
     </div>
     <div style="display:flex; gap:8px;">
       <button class="ghost danger" id="deleteTabBtn">Poista välilehti</button>
@@ -183,12 +184,16 @@ const api = async (path, opts = {}) => {
 };
 
 let watchers = [], activeId = null, products = [], editingProductId = null;
+let appConfig = { timezone: undefined };
 const $ = (id) => document.getElementById(id);
 
 function fmt(v) { return (v === null || v === undefined) ? "—" : v.toFixed(2).replace(".", ",") + " €"; }
 function fmtDate(iso) {
   if (!iso) return "ei vielä tarkistettu";
-  return new Date(iso).toLocaleString("fi-FI", { day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" });
+  const opts = { day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" };
+  if (appConfig.timezone) opts.timeZone = appConfig.timezone;
+  try { return new Date(iso).toLocaleString("fi-FI", opts); }
+  catch (e) { return new Date(iso).toLocaleString("fi-FI", { day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" }); }
 }
 let toastTimer;
 function toast(msg, kind = "") {
@@ -382,14 +387,28 @@ function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
 }
 
+async function testEmail() {
+  const email = $("emailInput").value.trim();
+  if (!email) { toast("Anna sähköpostiosoite ensin", "bad"); return; }
+  toast("Lähetetään testiviestiä…");
+  try {
+    const r = await api("api/test-email", { method: "POST", body: JSON.stringify({ email }) });
+    toast(r.message || "Testiviesti lähetetty", "good");
+  } catch (e) { toast(e.message, "bad"); }
+}
+
 $("saveEmailBtn").onclick = saveEmail;
+$("testEmailBtn").onclick = testEmail;
 $("deleteTabBtn").onclick = deleteWatcher;
 $("addProductBtn").onclick = () => openProductModal();
 $("productCancel").onclick = closeProductModal;
 $("productSave").onclick = saveProduct;
 $("productOverlay").onclick = (e) => { if (e.target.id === "productOverlay") closeProductModal(); };
 
-loadWatchers();
+(async () => {
+  try { appConfig = await api("api/config"); } catch (e) { /* keep defaults */ }
+  await loadWatchers();
+})();
 </script>
 </body>
 </html>

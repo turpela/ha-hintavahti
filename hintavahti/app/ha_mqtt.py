@@ -15,6 +15,7 @@ import logging
 import threading
 
 from . import config
+from .database import iso_utc
 
 log = logging.getLogger("hintavahti.mqtt")
 
@@ -151,7 +152,7 @@ def publish_product(product) -> None:
         "url": product.url,
         "lowest_price": product.lowest_price,
         "target_price": product.target_price,
-        "last_checked": product.last_checked.isoformat() if product.last_checked else None,
+        "last_checked": iso_utc(product.last_checked),
         "error": product.last_error or "",
     }
     client.publish(_attr_topic(product.id), json.dumps(attributes), retain=True)

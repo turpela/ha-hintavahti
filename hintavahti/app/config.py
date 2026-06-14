@@ -61,6 +61,10 @@ USER_AGENT = _get(
 )
 LOG_LEVEL = str(_get("log_level", "LOG_LEVEL", "INFO")).upper()
 
+# Timezone used to display times in the UI. Defaults to the add-on/container
+# TZ (which Home Assistant sets), falling back to Finnish time.
+DISPLAY_TIMEZONE = str(_get("timezone", "TZ", "Europe/Helsinki")) or "Europe/Helsinki"
+
 # --- Playwright (JS rendering) ---
 PLAYWRIGHT_ENABLED = _as_bool(_get("playwright_enabled", "PLAYWRIGHT_ENABLED", True), True)
 PLAYWRIGHT_TIMEOUT_MS = _as_int(_get("playwright_timeout_ms", "PLAYWRIGHT_TIMEOUT_MS", 30000), 30000)
