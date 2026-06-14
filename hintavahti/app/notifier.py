@@ -19,18 +19,40 @@ def _fmt(value: float | None) -> str:
     return "-" if value is None else f"{value:.2f} €".replace(".", ",")
 
 
+def _clean_text(s: str) -> str:
+    """Replace non-breaking/odd spaces with normal spaces; drop zero-width.
+
+    Such characters (often introduced by copy-paste) cannot be ASCII-encoded
+    and break header/body serialization in smtplib.
+    """
+    s = str(s)
+    for ch in ("\xa0", "\u202f", "\u2007", "\u2009", "\u200a"):
+        s = s.replace(ch, " ")
+    for ch in ("\u200b", "\ufeff"):
+        s = s.replace(ch, "")
+    return s.strip()
+
+
+def _clean_addr(s: str) -> str:
+    """Strip all whitespace (incl. non-breaking) and zero-width from an address."""
+    s = "".join(c for c in str(s) if not c.isspace())
+    return s.replace("\u200b", "").replace("\ufeff", "").strip()
+
+
 def _send(to_email: str, subject: str, body: str) -> tuple[bool, str]:
     """Send one message. Returns (ok, message)."""
     if not config.SMTP_HOST:
         return False, "SMTP-palvelinta ei ole määritetty add-onin asetuksissa."
+
+    to_email = _clean_addr(to_email)
     if not to_email:
         return False, "Sähköpostiosoite puuttuu."
 
     msg = EmailMessage()
-    msg["Subject"] = subject
-    msg["From"] = config.SMTP_FROM
+    msg["Subject"] = _clean_text(subject)
+    msg["From"] = _clean_addr(config.SMTP_FROM)
     msg["To"] = to_email
-    msg.set_content(body)
+    msg.set_content(_clean_text(body))
 
     try:
         with smtplib.SMTP(config.SMTP_HOST, config.SMTP_PORT, timeout=30) as server:
