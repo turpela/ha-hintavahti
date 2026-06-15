@@ -9,8 +9,8 @@ Two fetch backends:
 
 Price detection order on the fetched HTML:
   1. user-supplied CSS selector
-  2. JSON-LD structured product data
-  3. per-shop preset selectors (presets.py)
+  2. per-shop preset selectors (presets.py)
+  3. JSON-LD structured product data
   4. common meta tags
 """
 from __future__ import annotations
@@ -204,8 +204,8 @@ def get_price(url: str, css_selector: str = "", use_js: bool = False) -> float:
         raise PriceError("Annettu CSS-valitsin ei tuottanut hintaa.")
 
     for finder in (
-        lambda s: _price_from_jsonld(s),
         lambda s: _price_from_presets(s, url),
+        lambda s: _price_from_jsonld(s),
         lambda s: _price_from_meta(s),
     ):
         price = finder(soup)

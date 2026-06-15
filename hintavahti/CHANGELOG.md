@@ -2,6 +2,9 @@
 
 Hintavahti-add-onin versiohistoria.
 
+## 2.1.7 (2026-06-15)
+Muutettu hinnan tunnistusjärjestys scraper.py:ssä: kauppakohtaiset CSS-presetit tarkistetaan nyt ennen JSON-LD:tä ja meta-tageja. Näin tarjoushinnat (kuten Motonetin kampanjahinnat) löytyvät oikein ilman manuaalista valitsinta.
+
 ## 2.1.6 (2026-06-15)
 Päivitetty motonet.fi-presetti: tarjoushinta haetaan nyt `.MuiTypography-root.MuiTypography-h3.mui-sv4qni`-valitsimella ennen normaalihinnan valitsinta. Huom: MUI:n hash-luokka voi muuttua sivustopäivityksen yhteydessä.
 
