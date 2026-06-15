@@ -1,0 +1,24 @@
+# Muutosloki
+
+Hintavahti-add-onin versiohistoria.
+
+## 2.1.3 (2026-06-15)
+Lisätty k-ruoka.fi kauppakohtaisiin CSS-valitsimiin (presets.py). Huom: K-Ruoka näyttää hinnan vasta kun kauppa on valittu, joten hintaa ei välttämättä saada ilman erillistä kaupanvalintaa.
+
+## 2.1.2 (2026-06-15)
+Korjattu: sähköpostin lähetys kaatui rikkomattomaan välilyöntiin (U+00A0) SMTP-tunnuksessa tai -salasanassa, tyypillisesti Gmailin sovellussalasanaa kopioitaessa. Tunnukset siivotaan nyt ennen kirjautumista. Korjattu myös url-kenttä config.yaml- ja repository.yaml-tiedostoissa.
+
+## 2.1.1 (2026-06-15)
+Korjattu: rikkomattomat ja näkymättömät välilyönnit siivotaan sähköpostin osoitteista, otsikosta ja rungosta ennen lähetystä.
+
+## 2.1.0 (2026-06-15)
+Lisätty aikavyöhykkeen mukaiset kellonajat (timezone-asetus, oletus Europe/Helsinki) ja Testaa sähköposti -nappi. Uusi päätepiste GET /api/config.
+
+## 2.0.1 (2026-06-15)
+Korjattu: add-onin buildi kaatui riviin playwright install --with-deps. Pohjaimage vaihdettu viralliseen Playwright-imageen.
+
+## 2.0.0 (2026-06-15)
+Lisätty: paketointi Home Assistant -add-oniksi (Ingress, options), Playwright/Chromium-renderöinti, kauppakohtaiset CSS-valitsimet, HA-sensorit MQTT discoveryllä ja REST-rajapinta GET /api/sensors.
+
+## 1.0.0 (2026-06-15)
+Ensimmäinen versio: FastAPI + SQLite, useat välilehdet, hinnan tunnistus (JSON-LD/meta), ajastettu tarkistus, hintahistoria ja sähköposti-ilmoitukset.
