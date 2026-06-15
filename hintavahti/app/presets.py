@@ -48,6 +48,12 @@ PRESETS: dict[str, list[str]] = {
         '[data-test-id="product-price"]',
         ".product-price",
     ],
+    "k-ruoka.fi": [
+        '[data-testid="product-price"]',
+        '[data-test-id="product-price"]',
+        '[class*="price"]',
+        '[itemprop="price"]',
+    ],
     "motonet.fi": [
         ".product-price",
         '[itemprop="price"]',
