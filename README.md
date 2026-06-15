@@ -4,6 +4,8 @@ Itse hostattava hintaseuranta Home Assistantille. Seuraa verkkokauppojen
 tuotteiden hintoja, ilmoittaa sähköpostilla kun hinta laskee, ja tuo hinnat
 Home Assistantiin sensoreina. Käyttöliittymä avautuu suoraan HA:n sivupalkkiin.
 
+Versiohistoria: ks. [CHANGELOG.md](CHANGELOG.md).
+
 ## Ominaisuudet
 
 - Useita käyttäjiä omilla välilehdillä, kullakin oma ilmoitussähköposti
