@@ -2,6 +2,9 @@
 
 Hintavahti-add-onin versiohistoria.
 
+## 2.1.4 (2026-06-15)
+Korjattu Tokmannin hintatunnistus: `.product-info-price .price` on nyt ensimmäinen ehdokas presets.py:ssä. Aiempi järjestys johti väärään hintaan meta-tagin kautta.
+
 ## 2.1.3 (2026-06-15)
 Lisätty k-ruoka.fi kauppakohtaisiin CSS-valitsimiin (presets.py). Huom: K-Ruoka näyttää hinnan vasta kun kauppa on valittu, joten hintaa ei välttämättä saada ilman erillistä kaupanvalintaa.
 
