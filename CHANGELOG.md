@@ -2,6 +2,9 @@
 
 Hintavahti-add-onin versiohistoria.
 
+## 2.1.6 (2026-06-15)
+Päivitetty motonet.fi-presetti: tarjoushinta haetaan nyt `.MuiTypography-root.MuiTypography-h3.mui-sv4qni`-valitsimella ennen normaalihinnan valitsinta. Huom: MUI:n hash-luokka voi muuttua sivustopäivityksen yhteydessä.
+
 ## 2.1.5 (2026-06-15)
 Lisätty nettiauto.com kauppakohtaisiin CSS-valitsimiin (presets.py). Valitsin: `.details-page-header__item-price-main`.
 

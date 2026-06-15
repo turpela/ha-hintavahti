@@ -55,6 +55,7 @@ PRESETS: dict[str, list[str]] = {
         '[itemprop="price"]',
     ],
     "motonet.fi": [
+        ".MuiTypography-root.MuiTypography-h3.mui-sv4qni",
         ".product-price",
         '[itemprop="price"]',
     ],
