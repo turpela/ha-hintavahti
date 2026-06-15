@@ -90,6 +90,9 @@ PRESETS: dict[str, list[str]] = {
         ".product-price",
         '[itemprop="price"]',
     ],
+    "nettiauto.com": [
+        ".details-page-header__item-price-main",
+    ],
 }
 
 

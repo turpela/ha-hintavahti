@@ -2,6 +2,9 @@
 
 Hintavahti-add-onin versiohistoria.
 
+## 2.1.5 (2026-06-15)
+Lisätty nettiauto.com kauppakohtaisiin CSS-valitsimiin (presets.py). Valitsin: `.details-page-header__item-price-main`.
+
 ## 2.1.4 (2026-06-15)
 Korjattu Tokmannin hintatunnistus: `.product-info-price .price` on nyt ensimmäinen ehdokas presets.py:ssä. Aiempi järjestys johti väärään hintaan meta-tagin kautta.
 
