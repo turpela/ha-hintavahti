@@ -2,6 +2,9 @@
 
 Hintavahti-add-onin versiohistoria.
 
+## 2.2.0 (2026-06-17)
+Lisätty rate limiting "Tarkista nyt" -endpointille (`slowapi`): sama IP voi käynnistää hintatarkistuksen enintään kerran 30 sekunnissa per tuote. Ylimäärinen pyyntö palauttaa HTTP 429. Lisätty yksikkötestit (`pytest`) scraper.py:n hintaparsinnalle (63 testiä kattaen eri numeroformaatit, CSS-valitsimet, JSON-LD ja meta-tagit) sekä notifier.py:n apufunktioille. Korjattu myös bugi: kapea sitova välilyönti (U+202F, virallinen suomalainen tuhaterotin) ei tunnistunut hinnaksi – lisätty tuki `parse_price`-funktioon.
+
 ## 2.1.7 (2026-06-15)
 Muutettu hinnan tunnistusjärjestys scraper.py:ssä: kauppakohtaiset CSS-presetit tarkistetaan nyt ennen JSON-LD:tä ja meta-tageja. Näin tarjoushinnat (kuten Motonetin kampanjahinnat) löytyvät oikein ilman manuaalista valitsinta.
 

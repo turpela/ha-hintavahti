@@ -45,6 +45,14 @@ DATABASE_URL="sqlite:///./data/pricetracker.db" \
   uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
+## Testit
+
+```bash
+cd hintavahti
+pip install pytest
+pytest tests/
+```
+
 ## Rakenne
 
 ```
@@ -56,6 +64,9 @@ hintavahti/                  # add-on repository (lisää tämä HA:han)
     ├── Dockerfile           # python + Playwright/Chromium
     ├── DOCS.md
     ├── requirements.txt
+    ├── tests/
+    │   ├── test_scraper.py  # yksikkötestit: hintaparsinta, CSS, JSON-LD, meta
+    │   └── test_notifier.py # yksikkötestit: tekstin siivous, hinnan muotoilu
     └── app/
         ├── main.py          # API, tarkistus, ajastin, MQTT-julkaisu
         ├── config.py        # asetukset: options.json / env

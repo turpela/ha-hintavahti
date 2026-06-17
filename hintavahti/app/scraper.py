@@ -31,7 +31,7 @@ class PriceError(Exception):
     """Raised when a price could not be determined."""
 
 
-_NUMBER_RE = re.compile(r"[\d][\d.,\s\u00a0]*\d|\d")
+_NUMBER_RE = re.compile(r"[\d][\d.,\s\u00a0\u202f]*\d|\d")
 
 
 def parse_price(text: str | None) -> float | None:
@@ -43,7 +43,7 @@ def parse_price(text: str | None) -> float | None:
     match = _NUMBER_RE.search(text)
     if not match:
         return None
-    num = match.group(0).replace("\u00a0", "").replace(" ", "")
+    num = match.group(0).replace("\u00a0", "").replace("\u202f", "").replace(" ", "")
 
     has_comma, has_dot = "," in num, "." in num
     if has_comma and has_dot:

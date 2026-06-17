@@ -8,10 +8,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from apscheduler.schedulers.background import BackgroundScheduler
-from fastapi import Depends, FastAPI, HTTPException
-from fastapi.responses import FileResponse
+from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
 from sqlalchemy.orm import Session
 
 from . import config, ha_mqtt, notifier, scraper
@@ -25,6 +28,8 @@ log = logging.getLogger("hintavahti")
 
 STATIC_DIR = Path(__file__).parent / "static"
 scheduler = BackgroundScheduler(timezone="UTC")
+
+limiter = Limiter(key_func=get_remote_address)
 
 
 def check_product(session: Session, product: Product) -> dict:
@@ -112,6 +117,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Hintavahti", lifespan=lifespan)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 
 def get_db():
@@ -263,7 +270,8 @@ def delete_product(product_id: int, db: Session = Depends(get_db)):
 
 
 @app.post("/api/products/{product_id}/check")
-def check_now(product_id: int, db: Session = Depends(get_db)):
+@limiter.limit("1/30seconds")
+def check_now(request: Request, product_id: int, db: Session = Depends(get_db)):
     p = db.get(Product, product_id)
     if not p:
         raise HTTPException(404, "Tuotetta ei löytynyt")
