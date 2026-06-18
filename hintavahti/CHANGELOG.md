@@ -2,6 +2,9 @@
 
 Hintavahti-add-onin versiohistoria.
 
+## 2.2.1 (2026-06-18)
+Korjattu JYSK.fi-presetti: sivuston uudistuksen myötä vanhentunut `.product-price__price`-valitsin ei enää löytänyt elementtiä, jolloin liian laaja `[class*="price"]`-fallback osui alennusbadgeen (`-31%`) ja palautti alennusprosentin oikean hinnan sijasta. Presetti päivitetty käyttämään `.product-price-value`-elementtiä. Lisätty regressiotesti bugin estämiseksi.
+
 ## 2.2.0 (2026-06-17)
 Lisätty rate limiting "Tarkista nyt" -endpointille (`slowapi`): sama IP voi käynnistää hintatarkistuksen enintään kerran 30 sekunnissa per tuote. Ylimäärinen pyyntö palauttaa HTTP 429. Lisätty yksikkötestit (`pytest`) scraper.py:n hintaparsinnalle (63 testiä kattaen eri numeroformaatit, CSS-valitsimet, JSON-LD ja meta-tagit) sekä notifier.py:n apufunktioille. Korjattu myös bugi: kapea sitova välilyönti (U+202F, virallinen suomalainen tuhaterotin) ei tunnistunut hinnaksi – lisätty tuki `parse_price`-funktioon.
 

@@ -68,8 +68,9 @@ PRESETS: dict[str, list[str]] = {
         '[class*="price"]',
     ],
     "jysk.fi": [
-        ".product-price__price",
-        '[class*="price"]',
+        ".product-price-value",
+        "div.product-price.discountprice",
+        ".product-price-wrapper .product-price",
     ],
     "ikea.com": [
         ".pip-price__integer",
